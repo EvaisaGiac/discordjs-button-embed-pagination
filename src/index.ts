@@ -1,7 +1,7 @@
 import {DMChannel, Message, MessageButton, MessageEmbed, TextChannel,} from "discord.js";
 import {ButtonOption} from "./types/ButtonOption";
 
-const availableEmojis = ["⏮️", "◀️", "⏹️", "▶️", "⏭️"];
+const availableEmojis = ["⏮️", "◀️", "▶️", "⏭️"];
 
 class Pagination {
     private message?: Message;
@@ -24,9 +24,9 @@ class Pagination {
         private readonly timeout?: number,
         private readonly options ?: ButtonOption[]
     ) {
-        if (options && options.length > 5) {
+        if (options && options.length > 4) {
             throw new TypeError("You have passed more than 5 buttons as options")
-        } else if (options && options.length < 4) {
+        } else if (options && options.length < 3) {
             throw new TypeError("You have passed less than 5 buttons as options")
         }
         this.channel = channel;
@@ -72,14 +72,14 @@ class Pagination {
                             emoji: "◀️",
                             customId: "◀️"
 
-                        }, {
+                        }, /*{
                             type: 2,
                             style: "DANGER",
                             label: "Stop",
                             emoji: "⏹️",
                             customId: "⏹️"
 
-                        }, {
+                        },*/ {
                             type: 2,
                             style: "PRIMARY",
                             label: "Next",
@@ -120,27 +120,28 @@ class Pagination {
                 : customId === availableEmojis[1]
                 ? this.index - 1 // Prev
                 : customId === availableEmojis[2]
-                ? NaN // Stop
-                : customId === availableEmojis[3]
                 ? this.index + 1 // Next
-                : customId === availableEmojis[4]
+                : customId === availableEmojis[3]
                 ? this.pages.length - 1 // End
                 : this.index;
-            if (isNaN(newIndex)) {
+            /*if (isNaN(newIndex)) {
               // Stop
               interactionCollector.stop("stopped by user");
               await interaction.update({
                 components: [],
               });
-            } else {
-              if (newIndex < 0) newIndex = 0;
-              if (newIndex >= this.pages.length)
-                  newIndex = this.pages.length - 1;
-              this.index = newIndex;
-              await interaction.update({
-                embeds: [this.pages[this.index]],
-              });
-            }
+            }  {*/
+			
+			
+
+			if (newIndex < 0) newIndex = 0;
+			if (newIndex >= this.pages.length)
+				newIndex = this.pages.length - 1;
+			this.index = newIndex;
+			await interaction.update({
+			embeds: [this.pages[this.index]],
+			});
+           // }
         });
         interactionCollector.on("end", async () => {
             await this?.message?.edit({
